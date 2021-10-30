@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./out",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./node_modules/*"],
+      "@functions/*": ["./src/electron/functions/*"],
+      "@api/*": ["./src/electron/api/*"],
+      "@amq/*": ["./src/main/*"]
+    },
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true
+  },
+
+  "include": [
+    "./src/**/*"
+  ]
+}

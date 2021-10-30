@@ -1,0 +1,34 @@
+{
+  "name": "animemusicquiz-electron",
+  "version": "1.0.0",
+  "description": "An unofficial wrapper for the AnimeMusicQuiz browser-based game.",
+  "main": "./out/electron/index.js",
+  "repository": "https://github.com/PZeide/animemusicquiz-electron",
+  "author": "Zeide <zeide.thibaud@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && tsc-alias && browserify out/main/index.js -o out/bundle.js",
+    "dev": "yarn build && electron --enable-native-gpu-memory-buffers .",
+    "dist": "yarn build && electron-builder"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "tsc-alias": "^1.4.0",
+    "typescript": "^4.4.4"
+  },
+  "build": {
+    "appId": "animemusicquiz-electron",
+    "files": [
+      "./build/**/*",
+      "./out/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "./build/icon.ico"
+    }
+  }
+}
