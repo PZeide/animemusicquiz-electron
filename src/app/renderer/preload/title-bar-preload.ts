@@ -28,6 +28,6 @@ function setupTitlebarButtons() {
     });
 
     document.getElementById("title-bar-close-button")!.addEventListener("click", () => {
-        ipcRenderer.send("root-ask-close");
+        ipcRenderer.send("title-bar-ask-close");
     });
 }

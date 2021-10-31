@@ -91,19 +91,19 @@ function configureView(view: BrowserView, window: BrowserWindow) {
 }
 
 function listenTitleBarStateChange(window: BrowserWindow) {
-    ipcMain.on("root-ask-minimize", () => {
+    ipcMain.on("title-bar-ask-minimize", () => {
         window.minimize();
     });
 
-    ipcMain.on("root-ask-maximize", () => {
+    ipcMain.on("title-bar-ask-maximize", () => {
         window.maximize();
     });
 
-    ipcMain.on("root-ask-unmaximize", () => {
+    ipcMain.on("title-bar-ask-unmaximize", () => {
         window.unmaximize();
     });
 
-    ipcMain.on("root-ask-close", () => {
+    ipcMain.on("title-bar-ask-close", () => {
         window.close();
     });
 }
