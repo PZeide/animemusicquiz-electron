@@ -17,7 +17,7 @@ function createWindow(): BrowserWindow {
         frame: !isWindows,
         show: false,
         webPreferences: {
-            preload: path.join(__dirname, "../renderer/preload/root-preload.js")
+            preload: path.join(__dirname, "../renderer/preload/title-bar-preload.js")
         }
     };
 
