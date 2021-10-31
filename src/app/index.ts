@@ -8,6 +8,7 @@ import {setupSingleInstanceLock} from "@app/browser/instance";
 import {setupApplicationMenu} from "@app/browser/menu";
 import {setupSession} from "@app/browser/session";
 import {initializeWindow} from "@app/browser/window";
+import {setupAnalytics} from "@app/common/analytics";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../build/");
@@ -23,6 +24,11 @@ app.on("ready", () => {
     }
 
     nativeTheme.themeSource = "dark";
+
+    if (app.isPackaged) {
+        // Enable analytics only in dev environment
+        setupAnalytics();
+    }
 
     setupApplicationMenu();
     setupSession();
