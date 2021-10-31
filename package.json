@@ -30,9 +30,26 @@
     ],
     "win": {
       "target": [
+        "nsis",
+        "zip",
         "portable"
       ],
-      "icon": "./build/icon.ico"
+      "icon": "./build/icons/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "synopsis": "An unofficial wrapper for the AnimeMusicQuiz browser-based game.",
+      "category": "Game",
+      "icon": "./build/icons/icon.png"
+    },
+    "mac": {
+      "icon": "./build/icons/icon.icns",
+      "category": "public.app-category.music-games",
+      "darkModeSupport": true
     }
   }
 }

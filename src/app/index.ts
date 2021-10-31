@@ -1,7 +1,7 @@
 import "v8-compile-cache";
 
 import path from "path";
-import {app, BrowserWindow} from "electron";
+import {app, nativeTheme, BrowserWindow} from "electron";
 import log from "electron-log";
 import {setupLoggers} from "@app/common/log";
 import {setupSingleInstanceLock} from "@app/browser/instance";
@@ -21,6 +21,8 @@ app.on("ready", () => {
         app.quit();
         return;
     }
+
+    nativeTheme.themeSource = "dark";
 
     setupApplicationMenu();
     setupSession();

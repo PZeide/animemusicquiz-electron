@@ -3,6 +3,8 @@ import {app, dialog, ipcMain, shell, BrowserView, BrowserViewConstructorOptions,
 import log from "electron-log";
 import {setupWindowStateListeners} from "@app/common/window-state";
 
+const isWindows = process.platform === "win32";
+
 function createWindow(): BrowserWindow {
     const options: BrowserWindowConstructorOptions = {
         icon: path.join(buildPath, "icon.ico"),
@@ -11,7 +13,8 @@ function createWindow(): BrowserWindow {
         minWidth: 1280,
         minHeight: 720,
         title: "AnimeMusicQuiz",
-        frame: false,
+        // Show custom title bar only on windows
+        frame: !isWindows,
         show: false,
         webPreferences: {
             preload: path.join(__dirname, "../renderer/preload/root-preload.js")
@@ -31,15 +34,29 @@ function createView(): BrowserView {
     return new BrowserView(options);
 }
 
+function configureWindow(window: BrowserWindow, view: BrowserView) {
+    window.setBrowserView(view);
+    window.setMenuBarVisibility(false);
+
+    if (isWindows) {
+        // Load title bar on windows
+        window.loadFile(path.join(buildPath, "index.html"))
+            .then(() => log.info("Title bar successfully loaded."));
+    }
+
+    listenTitleBarStateChange(window);
+    setupWindowStateListeners(window, window.webContents, view.webContents);
+}
+
 function configureView(view: BrowserView, window: BrowserWindow) {
     const titleBarHeight = 30;
 
     // Set bounds of browser view to window bounds minus title bar height
     view.setBounds({
         x: 0,
-        y: titleBarHeight,
+        y: isWindows ? titleBarHeight : 0,
         width: window.getBounds().width,
-        height: window.getBounds().height - titleBarHeight
+        height: isWindows ? window.getBounds().height - titleBarHeight : window.getBounds().height
     });
 
     view.setAutoResize({
@@ -47,20 +64,22 @@ function configureView(view: BrowserView, window: BrowserWindow) {
         height: true
     });
 
-    // Adapt browser view position and size when toggling fullscreen since title bar disappear
-    window.on("enter-full-screen", () => {
-        let bounds = view.getBounds();
-        bounds.y = 0;
-        bounds.height += titleBarHeight;
-        view.setBounds(bounds);
-    });
+    if (isWindows) {
+        // Adapt browser view position and size when toggling fullscreen since title bar disappear
+        window.on("enter-full-screen", () => {
+            let bounds = view.getBounds();
+            bounds.y = 0;
+            bounds.height += titleBarHeight;
+            view.setBounds(bounds);
+        });
 
-    window.on("leave-full-screen", () => {
-        let bounds = view.getBounds();
-        bounds.y = 30;
-        bounds.height -= titleBarHeight;
-        view.setBounds(bounds);
-    });
+        window.on("leave-full-screen", () => {
+            let bounds = view.getBounds();
+            bounds.y = 30;
+            bounds.height -= titleBarHeight;
+            view.setBounds(bounds);
+        });
+    }
 
     // Open external links with default browser
     view.webContents.setWindowOpenHandler((handler) => {
@@ -71,7 +90,7 @@ function configureView(view: BrowserView, window: BrowserWindow) {
     });
 }
 
-function listenRootStateChange(window: BrowserWindow) {
+function listenTitleBarStateChange(window: BrowserWindow) {
     ipcMain.on("root-ask-minimize", () => {
         window.minimize();
     });
@@ -93,12 +112,8 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
     const window = createWindow();
     const view = createView();
 
-    window.setBrowserView(view);
+    configureWindow(window, view);
     configureView(view, window);
-
-    // Load content
-    window.loadFile(path.join(buildPath, "index.html"))
-        .then(() => log.info("Root file successfully loaded."));
 
     view.webContents.loadURL("https://animemusicquiz.com/?forceLogin=True")
         .then(() => {
@@ -109,9 +124,6 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
             dialog.showErrorBox("AMQ unavailable", "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later.");
             app.quit();
         });
-
-    listenRootStateChange(window);
-    setupWindowStateListeners(window, window.webContents, view.webContents);
 
     return [window, view]
 }

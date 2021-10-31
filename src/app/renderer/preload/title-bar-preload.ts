@@ -16,15 +16,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function setupTitlebarButtons() {
     document.getElementById("title-bar-min-button")!.addEventListener("click", () => {
-        ipcRenderer.send("root-ask-minimize");
+        ipcRenderer.send("title-bar-ask-minimize");
     });
 
     document.getElementById("title-bar-max-button")!.addEventListener("click", () => {
-        ipcRenderer.send("root-ask-maximize");
+        ipcRenderer.send("title-bar-ask-maximize");
     });
 
     document.getElementById("title-bar-unmax-button")!.addEventListener("click", () => {
-        ipcRenderer.send("root-ask-unmaximize");
+        ipcRenderer.send("title-bar-ask-unmaximize");
     });
 
     document.getElementById("title-bar-close-button")!.addEventListener("click", () => {
