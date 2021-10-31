@@ -9,9 +9,9 @@
   "scripts": {
     "build": "tsc && tsc-alias && browserify out/main/index.js -o out/bundle.js",
     "dev": "yarn build && electron --enable-native-gpu-memory-buffers .",
-    "dist:win": "yarn build && electron-builder --win --publish never",
-    "dist:linux": "yarn build && electron-builder --linux --publish never",
-    "dist:mac": "yarn build && electron-builder --mac --publish never"
+    "dist:win": "yarn build && electron-builder --win --publish onTagOrDraft",
+    "dist:linux": "yarn build && electron-builder --linux --publish onTagOrDraft",
+    "dist:mac": "yarn build && electron-builder --mac --publish onTagOrDraft"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
