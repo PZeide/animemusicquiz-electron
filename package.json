@@ -2,7 +2,7 @@
   "name": "animemusicquiz-electron",
   "version": "1.0.0",
   "description": "An unofficial wrapper for the AnimeMusicQuiz browser-based game.",
-  "main": "./out/electron/index.js",
+  "main": "./out/app/index.js",
   "repository": "https://github.com/PZeide/animemusicquiz-electron",
   "author": "Zeide <zeide.thibaud@gmail.com>",
   "license": "MIT",
@@ -17,6 +17,10 @@
     "electron-builder": "^22.13.1",
     "tsc-alias": "^1.4.0",
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "electron-log": "^4.4.1",
+    "v8-compile-cache": "^2.3.0"
   },
   "build": {
     "appId": "animemusicquiz-electron",

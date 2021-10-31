@@ -9,8 +9,8 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./node_modules/*"],
-      "@functions/*": ["./src/electron/functions/*"],
-      "@api/*": ["./src/electron/api/*"],
+      "@app/*": ["./src/app/*"],
+      "@api/*": ["./src/app/api/*"],
       "@amq/*": ["./src/main/*"]
     },
 

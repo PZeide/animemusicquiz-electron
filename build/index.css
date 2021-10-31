@@ -62,7 +62,7 @@ html.fullscreen #title-bar {
     -webkit-app-region: no-drag;
 }
 
-#window-controls > .title-bar-button {
+.title-bar-button {
     display: flex;
     justify-content: center;
     align-items: center;
