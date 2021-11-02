@@ -1,19 +1,18 @@
 import path from "path";
-import {app, ipcRenderer} from "electron";
+import {ipcRenderer} from "electron";
 import {redirectLoggers, setupLoggers} from "@app/common/log";
 import {listenWindowState} from "@app/common/window-state";
 import {setupAnalytics} from "@app/common/analytics";
+import {setupConfig} from "@app/common/config";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../../../build/");
+global.appConfig = setupConfig();
 
 setupLoggers();
 redirectLoggers();
 
-if (app.isPackaged) {
-    // Enable analytics only in dev environment
-    setupAnalytics();
-}
+setupAnalytics();
 
 window.addEventListener("DOMContentLoaded", () => {
     listenWindowState(document.documentElement);

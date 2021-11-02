@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "@sentry/electron": "^2.5.4",
+    "conf": "^10.0.3",
     "electron-log": "^4.4.1",
+    "proxy-deep": "^3.1.1",
     "v8-compile-cache": "^2.3.0"
   },
   "build": {

@@ -9,6 +9,7 @@ import {setupApplicationMenu} from "@app/browser/menu";
 import {setupSession} from "@app/browser/session";
 import {initializeWindow} from "@app/browser/window";
 import {setupAnalytics} from "@app/common/analytics";
+import {setupConfig} from "@app/common/config";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../build/");
@@ -23,13 +24,10 @@ app.on("ready", () => {
         return;
     }
 
+    global.appConfig = setupConfig();
     nativeTheme.themeSource = "dark";
 
-    if (app.isPackaged) {
-        // Enable analytics only in dev environment
-        setupAnalytics();
-    }
-
+    setupAnalytics();
     setupApplicationMenu();
     setupSession();
 
