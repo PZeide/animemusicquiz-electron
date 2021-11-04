@@ -46,7 +46,9 @@ if (process.platform === "darwin") {
     const quitMenuItem: MenuItemConstructorOptions = {
         label: "Quit",
         accelerator: "CmdOrCtrl+Q",
-        click: () => { app.quit() }
+        click: () => {
+            app.quit()
+        }
     }
 
     menuTemplate.push(quitMenuItem);

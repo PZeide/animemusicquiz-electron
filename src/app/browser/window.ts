@@ -1,5 +1,14 @@
 import path from "path";
-import {app, dialog, ipcMain, shell, BrowserView, BrowserViewConstructorOptions, BrowserWindow, BrowserWindowConstructorOptions} from "electron";
+import {
+    app,
+    dialog,
+    ipcMain,
+    shell,
+    BrowserView,
+    BrowserViewConstructorOptions,
+    BrowserWindow,
+    BrowserWindowConstructorOptions
+} from "electron";
 import log from "electron-log";
 import {setupWindowStateListeners} from "@app/common/window-state";
 
@@ -86,7 +95,7 @@ function configureView(view: BrowserView, window: BrowserWindow) {
         shell.openExternal(handler.url)
             .catch(() => log.warn("Unable to load external url in default browser."));
 
-        return { action: "deny" };
+        return {action: "deny"};
     });
 }
 
@@ -120,10 +129,10 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
             log.info("AnimeMusicQuiz site successfully loaded.");
             window.show();
         }).catch(() => {
-            log.error("AnimeMusicQuiz site is unreachable.");
-            dialog.showErrorBox("AMQ unavailable", "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later.");
-            app.quit();
-        });
+        log.error("AnimeMusicQuiz site is unreachable.");
+        dialog.showErrorBox("AMQ unavailable", "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later.");
+        app.quit();
+    });
 
     return [window, view]
 }
