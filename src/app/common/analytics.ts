@@ -9,7 +9,13 @@ function setupAnalyticsOnBrowser() {
 
     if (app.isPackaged) {
         Sentry.init({
-            dsn: dsn
+            dsn: dsn,
+            beforeSend(event) {
+                if (appConfig.general.analytics)
+                    return event;
+
+                return null;
+            }
         });
     }
 }
