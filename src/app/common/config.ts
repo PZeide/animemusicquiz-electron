@@ -2,7 +2,7 @@ import {ipcMain, ipcRenderer, app, webContents, WebContents} from "electron";
 import Conf from "conf";
 import DeepProxy from "proxy-deep";
 
-const callbacks: Record<string, OnConfigChangeCallback<any>[]> = {}
+const callbacks: Record<string, OnConfigChangeCallback<any>[]> = {};
 
 const defaultConfig: AppConfig = {
     general: {
@@ -16,19 +16,27 @@ const defaultConfig: AppConfig = {
     }
 };
 
-function triggerCallbacks(path: string, newValue: any, oldValue: any, ...informTo: WebContents[]) {
+function triggerBrowserCallbacks(path: string, newValue: any, oldValue: any, sendTo: WebContents[]) {
     if (path in callbacks) {
         callbacks[path].forEach((callback) => {
             callback(newValue, oldValue);
         });
     }
 
-    if (process.type === "browser" && informTo.length !== 0) {
-        informTo.forEach((webContent) => {
-            webContent.send("config-change", path, newValue, oldValue);
-        })
-    } else if (process.type === "renderer") {
-        ipcRenderer.send("config-change", path, newValue, oldValue)
+    sendTo.forEach((webContent) => {
+        webContent.send("config-change", path, newValue, oldValue);
+    });
+}
+
+function triggerRendererCallbacks(path: string, newValue: any, oldValue: any, isOrigin: boolean) {
+    if (path in callbacks) {
+        callbacks[path].forEach((callback) => {
+            callback(newValue, oldValue);
+        });
+    }
+
+    if (isOrigin) {
+        ipcRenderer.send("config-change", path, newValue, oldValue);
     }
 }
 
@@ -41,24 +49,25 @@ function createProxiedConfig(configPath: string, appVersion: string): AppConfig 
 
     return new DeepProxy<AppConfig>(defaultConfig, {
         get(target: AppConfig, key: PropertyKey, receiver: any) {
-            const val = Reflect.get(target, key, receiver)
+            const val = Reflect.get(target, key, receiver);
             if (typeof val === "object" && val !== null) {
                 return this.nest(val);
             } else {
-                return val;
+                const path = this.path.join('.') + '.' + key.toString();
+                return conf.get(path);
             }
         },
 
         set(_target: AppConfig, key: PropertyKey, value: any, _receiver: any): boolean {
-            const path = key.toString();
+            const path = this.path.join('.') + '.' + key.toString();
 
             const oldValue = conf.get(path);
             conf.set(path, value);
 
             if (process.type === "browser") {
-                triggerCallbacks(path, oldValue, value, ...webContents.getAllWebContents());
+                triggerBrowserCallbacks(path, value, oldValue, webContents.getAllWebContents());
             } else if (process.type === "renderer") {
-                triggerCallbacks(path, oldValue, value);
+                triggerRendererCallbacks(path, value, oldValue, true);
             }
 
             return true;
@@ -68,12 +77,14 @@ function createProxiedConfig(configPath: string, appVersion: string): AppConfig 
 
 function setupConfigOnBrowser(): AppConfig {
     // Browser process setup should only happen once
-    ipcMain.handle("config-ask-info", () => [app.getPath("userData"), app.getVersion()]);
+    ipcMain.on("config-ask-info", (event) => {
+        event.returnValue = [app.getPath("userData"), app.getVersion()];
+    });
 
     ipcMain.on("config-change", (event, path: string, newValue: any, oldValue: any) => {
         // Inform changes to every other renderer processes except one that sends the request
         const to = webContents.getAllWebContents().filter((webContent) => webContent !== event.sender);
-        triggerCallbacks(path, newValue, oldValue, ...to);
+        triggerBrowserCallbacks(path, newValue, oldValue, to);
     });
 
     return createProxiedConfig(app.getPath("userData"), app.getVersion());
@@ -81,7 +92,7 @@ function setupConfigOnBrowser(): AppConfig {
 
 function setupConfigOnRenderer(): AppConfig {
     ipcRenderer.on("config-change", (_event, path: string, newValue: any, oldValue: any) => {
-        triggerCallbacks(path, newValue, oldValue);
+        triggerRendererCallbacks(path, newValue, oldValue, false);
     });
 
     const info: [string, string] = ipcRenderer.sendSync("config-ask-info");
@@ -98,7 +109,7 @@ export function setupConfig(): AppConfig {
     } else if (process.type === "renderer") {
         return setupConfigOnRenderer();
     } else {
-        throw Error("Worker process aren't supported.")
+        throw Error("Worker process aren't supported.");
     }
 }
 

@@ -33,7 +33,7 @@ function patchSessionCookie(amqSession: Session) {
                 sameSite: "strict",
                 value: cookie.value,
                 expirationDate: date.getTime() / 1000
-            }
+            };
 
             amqSession.cookies.remove(cookieUrl, cookie.name)
                 .then(() => {
@@ -46,9 +46,22 @@ function patchSessionCookie(amqSession: Session) {
     });
 }
 
+function setupAmqServeProtocol(amqSession: Session) {
+    // Protocol used to send file data to amq browser view
+    amqSession.protocol.registerFileProtocol("amq-serve", (request, callback) => {
+        const url = request.url.substr(12);
+
+        if (url.startsWith("background")) {
+            // When browser is asking for background image
+            callback({ path: appConfig.appearance.backgroundImage });
+        }
+    });
+}
+
 export function setupSession() {
     const amqSession = session.defaultSession;
 
     dismissCookieConsent(amqSession);
     patchSessionCookie(amqSession);
+    setupAmqServeProtocol(amqSession);
 }

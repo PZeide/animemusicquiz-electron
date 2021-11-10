@@ -5,7 +5,9 @@ const dsn = "https://8aa85a039b8340c68723375d00e9c447@o1049693.ingest.sentry.io/
 
 function setupAnalyticsOnBrowser() {
     // Browser process setup should only happen once
-    ipcMain.handle("allow-analytics", () => app.isPackaged);
+    ipcMain.on("allow-analytics", (event) => {
+        event.returnValue = app.isPackaged;
+    });
 
     if (app.isPackaged) {
         Sentry.init({
@@ -21,7 +23,7 @@ function setupAnalyticsOnBrowser() {
 }
 
 function setupAnalyticsOnRenderer() {
-    const allowAnalytics = ipcRenderer.sendSync("allow-analytics")
+    const allowAnalytics = ipcRenderer.sendSync("allow-analytics");
 
     if (allowAnalytics) {
         Sentry.init({

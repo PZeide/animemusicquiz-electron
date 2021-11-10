@@ -38,7 +38,7 @@ function createView(): BrowserView {
         webPreferences: {
             preload: path.join(__dirname, "../renderer/preload/amq-preload.js")
         }
-    }
+    };
 
     return new BrowserView(options);
 }

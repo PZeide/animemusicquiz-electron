@@ -49,7 +49,7 @@ if (process.platform === "darwin") {
         click: () => {
             app.quit()
         }
-    }
+    };
 
     menuTemplate.push(quitMenuItem);
 }

@@ -19,7 +19,7 @@ app.on("ready", () => {
     log.info("Initializing AnimeMusicQuiz Electron.");
 
     if (!setupSingleInstanceLock()) {
-        log.warn("An instance is already running, exiting.")
+        log.warn("An instance is already running, exiting.");
         app.quit();
         return;
     }

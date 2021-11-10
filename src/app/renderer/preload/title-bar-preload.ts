@@ -7,11 +7,10 @@ import {setupConfig} from "@app/common/config";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../../../build/");
-global.appConfig = setupConfig();
-
 setupLoggers();
 redirectLoggers();
 
+global.appConfig = setupConfig();
 setupAnalytics();
 
 window.addEventListener("DOMContentLoaded", () => {

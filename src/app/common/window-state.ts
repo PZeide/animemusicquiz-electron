@@ -40,6 +40,6 @@ export function listenWindowState(target: Element) {
     });
 
     ipcRenderer.on("window-leave-full-screen", () => {
-        target.classList.remove("maximized");
+        target.classList.remove("fullscreen");
     });
 }

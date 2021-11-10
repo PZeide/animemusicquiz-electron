@@ -1,0 +1,82 @@
+/* Generated from DarkReader: 26/10/2021 */
+
+.slider.slider-horizontal .slider-tick.triangle, .slider.slider-horizontal .slider-handle.triangle {
+    border-bottom-color: rgb(4, 130, 193);
+}
+
+.slider.slider-vertical .slider-tick.triangle, .slider.slider-vertical .slider-handle.triangle {
+    border-left-color: rgb(4, 130, 193);
+    border-right-color: rgb(4, 130, 193);
+}
+
+.slider.slider-disabled .slider-handle {
+    background-image: linear-gradient(rgb(42, 46, 47) 0px, rgb(61, 66, 68) 100%);
+}
+
+.slider.slider-disabled .slider-track {
+    background-image: linear-gradient(rgb(39, 42, 44) 0px, rgb(36, 39, 41) 100%);
+}
+
+.slider-track {
+    background-image: linear-gradient(rgb(30, 32, 33) 0px, rgb(27, 30, 31) 100%);
+    box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px inset;
+}
+
+.slider-selection {
+    background-image: linear-gradient(rgb(27, 30, 31) 0px, rgb(30, 32, 33) 100%);
+    box-shadow: rgba(0, 0, 0, 0.15) 0 -1px 0 inset;
+}
+
+.slider-selection.tick-slider-selection {
+    background-image: linear-gradient(rgb(16, 82, 116) 0px, rgb(30, 87, 116) 100%);
+}
+
+.slider-track-low, .slider-track-high {
+    background-image: initial;
+    background-color: transparent;
+}
+
+.slider-handle {
+    background-color: rgb(41, 98, 146);
+    background-image: linear-gradient(rgb(16, 124, 178) 0px, rgb(3, 102, 152) 100%);
+    box-shadow: rgba(24, 26, 27, 0.2) 0 1px 0 inset, rgba(0, 0, 0, 0.05) 0 1px 2px;
+    border-color: transparent;
+}
+
+.slider-handle.triangle {
+    background-image: none;
+    background-color: transparent;
+}
+
+.slider-handle.custom {
+    background-image: none;
+    background-color: transparent;
+}
+
+.slider-handle.custom::before {
+    color: rgb(250, 232, 126);
+}
+
+.slider-tick {
+    background-image: linear-gradient(rgb(27, 30, 31) 0px, rgb(30, 32, 33) 100%);
+    box-shadow: rgba(0, 0, 0, 0.15) 0 -1px 0 inset;
+    border-color: transparent;
+}
+
+.slider-tick.triangle {
+    background-image: none;
+    background-color: transparent;
+}
+
+.slider-tick.custom {
+    background-image: none;
+    background-color: transparent;
+}
+
+.slider-tick.custom::before {
+    color: rgb(250, 232, 126);
+}
+
+.slider-tick.in-selection {
+    background-image: linear-gradient(rgb(16, 82, 116) 0px, rgb(30, 87, 116) 100%);
+}
