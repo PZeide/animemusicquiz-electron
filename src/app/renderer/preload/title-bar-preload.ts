@@ -5,8 +5,9 @@ import {listenWindowState} from "@app/common/window-state";
 import {setupAnalytics} from "@app/common/analytics";
 import {setupConfig} from "@app/common/config";
 
-// Easier access to build path
+// Easier access to build and appdata path
 global.buildPath = path.join(__dirname, "../../../../build/");
+global.appDataPath = ipcRenderer.sendSync("get-app-data-path");
 setupLoggers();
 redirectLoggers();
 

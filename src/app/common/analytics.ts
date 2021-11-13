@@ -44,6 +44,6 @@ export function setupAnalytics() {
     } else if (process.type === "renderer") {
         setupAnalyticsOnRenderer();
     } else {
-        throw Error("Worker process aren't supported.")
+        throw Error("Worker process aren't supported.");
     }
 }

@@ -13,6 +13,7 @@ import {setupConfig} from "@app/common/config";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../build/");
+global.appDataPath = app.getPath("userData");
 
 app.on("ready", () => {
     setupLoggers();

@@ -117,6 +117,12 @@ function listenTitleBarStateChange(window: BrowserWindow) {
     });
 }
 
+function setupGenericCommunications() {
+    ipcMain.on("get-app-data-path", (event) => {
+        event.returnValue = global.appDataPath;
+    });
+}
+
 export function initializeWindow(): [BrowserWindow, BrowserView] {
     const window = createWindow();
     const view = createView();
@@ -124,15 +130,17 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
     configureWindow(window, view);
     configureView(view, window);
 
+    setupGenericCommunications();
+
     view.webContents.loadURL("https://animemusicquiz.com/?forceLogin=True")
         .then(() => {
             log.info("AnimeMusicQuiz site successfully loaded.");
             window.show();
         }).catch(() => {
-        log.error("AnimeMusicQuiz site is unreachable.");
-        dialog.showErrorBox("AMQ unavailable", "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later.");
-        app.quit();
-    });
+            log.error("AnimeMusicQuiz site is unreachable.");
+            dialog.showErrorBox("AMQ unavailable", "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later.");
+            app.quit();
+        });
 
     return [window, view]
 }

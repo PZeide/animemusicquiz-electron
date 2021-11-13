@@ -78,3 +78,11 @@ export async function setupDarkTheme() {
 }
 
 //#endregion Dark Theme
+
+//#region Custom Style
+
+async function setupCustomStyle() {
+
+}
+
+//#endregion Custom Style
