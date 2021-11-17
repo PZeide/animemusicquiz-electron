@@ -3,42 +3,47 @@ import log from "electron-log";
 
 const styleIdPrefix = "amqe-style-";
 
-export function insertStylesheet(id: string, path: string, isEnabled: boolean = true): Promise<void> {
-    id = styleIdPrefix + id;
-
+export function insertStylesheet(id: string, style: string, isEnabled: boolean = true): Promise<void> {
+    const insertionId = styleIdPrefix + id;
     return new Promise<void>((resolve, reject) => {
-        if (document.getElementById(id)) {
-            reject(`Stylesheet already exists: ${id}`);
-            return;
+        if (isStylesheetInserted(id)) {
+            reject(`Stylesheet with id ${id} already inserted.`);
         }
 
+        const stylesheet = document.createElement("style");
+        stylesheet.id = insertionId;
+        stylesheet.setAttribute("type", "text/css");
+        stylesheet.textContent = style;
+
+        if (!isEnabled) {
+            stylesheet.setAttribute("media", "not all");
+        }
+
+        document.head.appendChild(stylesheet);
+        resolve();
+    });
+}
+
+export function insertStylesheetFile(id: string, path: string, isEnabled: boolean = true): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
         fs.readFile(path, "utf-8", (error, style) => {
             if (error) {
                 reject(error);
                 return;
             }
 
-            const stylesheet = document.createElement("style");
-            stylesheet.id = id;
-            stylesheet.setAttribute("type", "text/css");
-            stylesheet.textContent = style;
-
-            if (!isEnabled) {
-                stylesheet.setAttribute("media", "not all");
-            }
-
-            document.head.appendChild(stylesheet);
-            resolve();
+            insertStylesheet(id, style, isEnabled)
+                .then(resolve)
+                .catch(reject);
         });
     });
 }
 
 export function removeStylesheet(id: string) {
-    id = styleIdPrefix + id;
-
-    const stylesheet = document.createElement("style");
+    const insertionId = styleIdPrefix + id;
+    const stylesheet = document.getElementById(insertionId);
     if (!stylesheet) {
-        log.error(`Cannot find stylesheet: ${id}`);
+        log.error(`Cannot find stylesheet: ${id}.`);
         return;
     }
 
@@ -46,11 +51,10 @@ export function removeStylesheet(id: string) {
 }
 
 export function enableStylesheet(id: string) {
-    id = styleIdPrefix + id;
-
-    const stylesheet = document.getElementById(id);
+    const insertionId = styleIdPrefix + id;
+    const stylesheet = document.getElementById(insertionId);
     if (!stylesheet) {
-        log.error(`Cannot find stylesheet: ${id}`);
+        log.error(`Cannot find stylesheet: ${id}.`);
         return;
     }
 
@@ -58,13 +62,29 @@ export function enableStylesheet(id: string) {
 }
 
 export function disableStylesheet(id: string) {
-    id = styleIdPrefix + id;
-
-    const stylesheet = document.getElementById(id);
+    const insertionId = styleIdPrefix + id;
+    const stylesheet = document.getElementById(insertionId);
     if (!stylesheet) {
-        log.error(`Cannot find stylesheet: ${id}`);
+        log.error(`Cannot find stylesheet: ${id}.`);
         return;
     }
 
     stylesheet.setAttribute("media", "not all");
+}
+
+export function editStylesheet(id: string, style: string) {
+    const insertionId = styleIdPrefix + id;
+    const stylesheet = document.getElementById(insertionId);
+    if (!stylesheet) {
+        log.error(`Cannot find stylesheet: ${id}.`);
+        return;
+    }
+
+    stylesheet.textContent = style;
+}
+
+export function isStylesheetInserted(id: string) {
+    log.info(id);
+    log.info(document.getElementById(styleIdPrefix + id));
+    return document.getElementById(styleIdPrefix + id) !== null;
 }

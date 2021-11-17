@@ -80,7 +80,7 @@ function createProxiedConfig(configPath: string, appVersion: string): AppConfig 
 // When a config change occur in any renderer process, this process inform the browser process for the changes,
 // then, the browser process will inform every other renderer processes for the changes.
 export function setupConfig(): AppConfig {
-    return createProxiedConfig(global.appDataPath, "1.0");
+    return createProxiedConfig(appDataPath, "1.0");
 }
 
 export function onConfigChange<T>(path: string, callback: OnConfigChangeCallback<T>) {

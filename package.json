@@ -14,6 +14,7 @@
     "dist:mac": "yarn build && electron-builder --mac --publish onTagOrDraft"
   },
   "devDependencies": {
+    "@types/sass": "^1.43.0",
     "browserify": "^17.0.0",
     "electron": "^15.3.0",
     "electron-builder": "^22.13.1",
@@ -22,9 +23,11 @@
   },
   "dependencies": {
     "@sentry/electron": "^2.5.4",
+    "chokidar": "^3.5.2",
     "conf": "^10.0.3",
     "electron-log": "^4.4.1",
     "proxy-deep": "^3.1.1",
+    "sass": "^1.43.4",
     "v8-compile-cache": "^2.3.0"
   },
   "build": {
