@@ -5,7 +5,7 @@ import {redirectLoggers, setupLoggers} from "@app/common/log";
 import {setupAnalytics} from "@app/common/analytics";
 import {setupConfig} from "@app/common/config";
 import {listenWindowState} from "@app/common/window-state";
-import {insertStylesheetFile} from "@app/renderer/stylesheet";
+import {insertStylesheetFile} from "@app/renderer/amq/stylesheet";
 import {setupBackgroundImage, setupDarkTheme, setupTransparency, setupCustomStyle} from "@app/renderer/amq/appearance";
 
 // Easier access to build and appdata path

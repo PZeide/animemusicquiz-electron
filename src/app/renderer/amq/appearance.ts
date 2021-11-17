@@ -8,7 +8,7 @@ import {
     enableStylesheet,
     disableStylesheet,
     insertStylesheet, editStylesheet
-} from "@app/renderer/stylesheet";
+} from "@app/renderer/amq/stylesheet";
 
 //#region Background Image
 
