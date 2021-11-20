@@ -14,6 +14,7 @@
     "dist:mac": "yarn build && electron-builder --mac --publish onTagOrDraft"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.8",
     "@types/sass": "^1.43.0",
     "browserify": "^17.0.0",
     "electron": "^15.3.0",

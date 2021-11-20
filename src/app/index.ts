@@ -10,6 +10,7 @@ import {setupSession} from "@app/browser/session";
 import {initializeWindow} from "@app/browser/window";
 import {setupAnalytics} from "@app/common/analytics";
 import {setupConfig} from "@app/common/config";
+import {setupIpcUtils} from "@app/browser/utils";
 
 // Easier access to build path
 global.buildPath = path.join(__dirname, "../../build/");
@@ -31,6 +32,7 @@ app.on("ready", () => {
     setupAnalytics();
     setupApplicationMenu();
     setupSession();
+    setupIpcUtils();
 
     const [window, view] = initializeWindow();
     global.browserWindow = window;

@@ -24,6 +24,7 @@ html.fullscreen {
 
 .customSettingContainer {
     display: flex;
+    align-items: center;
 }
 
 .customSettingContainer > div {

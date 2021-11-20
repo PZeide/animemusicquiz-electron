@@ -84,7 +84,5 @@ export function editStylesheet(id: string, style: string) {
 }
 
 export function isStylesheetInserted(id: string) {
-    log.info(id);
-    log.info(document.getElementById(styleIdPrefix + id));
     return document.getElementById(styleIdPrefix + id) !== null;
 }

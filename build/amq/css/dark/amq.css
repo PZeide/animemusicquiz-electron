@@ -35,6 +35,10 @@ body {
     background-color: transparent;
 }
 
+#rbMajorFilters {
+    background: none;
+}
+
 .leftRightButtonTop {
     box-shadow: rgba(0, 0, 0, 0.89) 1px -3px 10px;
 }
@@ -579,6 +583,10 @@ textarea {
 }
 
 #rightMenuBarPartContainer::before {
+    background-color: rgb(20, 22, 23);
+}
+
+#footerMenuBar .menuBar {
     background-color: rgb(20, 22, 23);
 }
 
