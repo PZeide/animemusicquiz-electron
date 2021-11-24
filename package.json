@@ -40,7 +40,6 @@
     "win": {
       "target": [
         "nsis",
-        "zip",
         "portable"
       ],
       "icon": "./build/icons/icon.ico"
