@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -15,7 +16,8 @@ body {
     grid-template-rows: 30px auto;
 }
 
-html.maximized, html.fullscreen {
+html.maximized,
+html.fullscreen {
     border: 0;
 }
 
@@ -74,7 +76,8 @@ html.fullscreen #title-bar {
     grid-column: 1;
 }
 
-#title-bar-max-button, #title-bar-unmax-button {
+#title-bar-max-button,
+#title-bar-unmax-button {
     grid-column: 2;
 }
 
@@ -103,13 +106,9 @@ html.maximized #title-bar-max-button {
 }
 
 #title-bar-close-button:hover {
-    background: #e81123;
+    background: #c42b1c;
 }
 
 #title-bar-close-button:active {
-    background: #f1707a;
-}
-
-#title-bar-close-button:active > .title-bar-button-icon {
-    filter: invert(1);
+    background: #c24f45;
 }

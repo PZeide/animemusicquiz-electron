@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -10,13 +10,13 @@
     "paths": {
       "*": ["./node_modules/*"],
       "@app/*": ["./src/app/*"],
-      "@api/*": ["./src/app/api/*"],
-      "@amq/*": ["./src/main/*"]
+      "@amq/*": ["./src/amq/*"],
+      "@build/*": ["./src/build/*"],
     },
 
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictNullChecks": true,
     "noImplicitAny": true
   },
 

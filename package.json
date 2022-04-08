@@ -7,28 +7,30 @@
   "author": "Zeide <zeide.thibaud@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc && tsc-alias && browserify out/main/index.js -o out/bundle.js",
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "tsc && tsc-alias && browserify out/amq/index.js -o out/bundle.js",
     "dev": "yarn build && electron --enable-native-gpu-memory-buffers .",
     "dist:win": "yarn build && electron-builder --win --publish onTagOrDraft",
     "dist:linux": "yarn build && electron-builder --linux --publish onTagOrDraft",
     "dist:mac": "yarn build && electron-builder --mac --publish onTagOrDraft"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.8",
-    "@types/sass": "^1.43.0",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "browserify": "^17.0.0",
-    "electron": "^15.3.0",
-    "electron-builder": "^22.13.1",
-    "tsc-alias": "^1.4.0",
-    "typescript": "^4.4.4"
+    "electron": "^17.0.1",
+    "electron-builder": "^22.14.13",
+    "eslint": "^8.12.0",
+    "prettier": "2.6.2",
+    "tsc-alias": "^1.6.1",
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@sentry/electron": "^2.5.4",
-    "chokidar": "^3.5.2",
-    "conf": "^10.0.3",
-    "electron-log": "^4.4.1",
-    "proxy-deep": "^3.1.1",
-    "sass": "^1.43.4",
+    "@qiwi/deep-proxy": "^1.8.4",
+    "@sentry/electron": "^3.0.0",
+    "conf": "^10.1.2",
+    "electron-log": "^4.4.6",
+    "eslint-config-prettier": "^8.5.0",
     "v8-compile-cache": "^2.3.0"
   },
   "build": {
