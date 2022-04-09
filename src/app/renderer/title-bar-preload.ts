@@ -36,10 +36,6 @@ function setupDarkThemeVariant() {
   if (config.appearance.darkTheme) document.documentElement.classList.add("dark");
 
   onConfigChange("appearance.darkTheme", (newValue) => {
-    if (newValue) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", newValue);
   });
 }

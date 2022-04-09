@@ -1,0 +1,137 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+html {
+    box-sizing: border-box;
+    border: 1px solid #48545c;
+
+    &.maximized, &.fullscreen {
+        border: none;
+    }
+}
+
+body {
+    display: grid;
+    grid-template-rows: 30px auto;
+
+    html.fullscreen & {
+        display: block;
+    }
+}
+
+#title-bar {
+    position: relative;
+    box-sizing: border-box;
+    height: 30px;
+    width: 100%;
+    padding: 4px;
+    color: #FFF;
+    background: #1b1b1b;
+    z-index: 9999;
+
+    html.maximized & {
+        padding: 0;
+    }
+
+    html.fullscreen & {
+        display: none;
+    }
+
+    html.dark & {
+        background: #141617;
+    }
+}
+
+#drag-region {
+    width: 100%;
+    height: 100%;
+    -webkit-app-region: drag;
+}
+
+#app-info {
+    margin-left: 6px;
+    display: grid;
+    height: 100%;
+    grid-template-columns: 19px auto;
+    grid-gap: 6px;
+    align-items: center;
+
+    #app-icon {
+        width: 100%;
+    }
+
+    #app-title {
+        font-family: "Segoe UI", sans-serif;
+        font-size: 13px;
+    }
+}
+
+#window-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    -webkit-app-region: no-drag;
+
+    %title-bar-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        grid-row: 1 / span 1;
+        user-select: none;
+        transition-duration: .2s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        &:active {
+            transition-duration: 0s;
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    #title-bar-min-button {
+        @extend %title-bar-button;
+        grid-column: 1;
+    }
+
+    #title-bar-max-button {
+        @extend %title-bar-button;
+        grid-column: 2;
+
+        html.maximized & {
+            display: none;
+        }
+    }
+
+    #title-bar-unmax-button {
+        @extend %title-bar-button;
+        grid-column: 2;
+        display: none;
+
+        html.maximized & {
+            display: flex;
+        }
+    }
+
+    #title-bar-close-button {
+        @extend %title-bar-button;
+        grid-column: 3;
+
+        &:hover {
+            background: #c42b1c;
+        }
+
+        &:active {
+            background: #c24f45;
+        }
+    }
+}

@@ -1,0 +1,14 @@
+:root {
+  //noinspection CssUnknownTarget
+  --bg: url(amq-serve://background);
+}
+
+@mixin amq-background {
+  background-image: var(--bg) !important;
+  background-size: cover;
+}
+
+#startPage { @include amq-background; }
+#gameContainer { @include amq-background; }
+#loadingScreen { @include amq-background; }
+#awMainView { @include amq-background; }

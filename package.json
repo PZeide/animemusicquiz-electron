@@ -1,14 +1,18 @@
 {
   "name": "animemusicquiz-electron",
   "version": "1.0.0",
-  "description": "An unofficial wrapper for the AnimeMusicQuiz browser-based game.",
+  "description": "An unofficial wrapper for the Anime Music Quiz browser-based game.",
   "main": "./out/app/index.js",
   "repository": "https://github.com/PZeide/animemusicquiz-electron",
   "author": "Zeide <zeide.thibaud@gmail.com>",
   "license": "MIT",
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
-    "build": "tsc && tsc-alias && browserify out/amq/index.js -o out/bundle.js",
+    "build:tsc": "tsc && tsc-alias",
+    "build:bundle": "browserify out/amq/index.js > out/amq.js",
+    "build:copyfiles": "copyfiles -u 2 src/public/**/* -e src/public/**/*.scss out/public",
+    "build:sass": "sass src/public:out/public",
+    "build": "yarn build:tsc && yarn build:bundle && yarn build:sass && yarn build:copyfiles",
     "dev": "yarn build && electron --enable-native-gpu-memory-buffers .",
     "dist:win": "yarn build && electron-builder --win --publish onTagOrDraft",
     "dist:linux": "yarn build && electron-builder --linux --publish onTagOrDraft",
@@ -18,16 +22,19 @@
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "browserify": "^17.0.0",
+    "copyfiles": "^2.4.1",
     "electron": "^17.0.1",
     "electron-builder": "^22.14.13",
     "eslint": "^8.12.0",
     "prettier": "2.6.2",
+    "sass": "^1.50.0",
     "tsc-alias": "^1.6.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
     "@qiwi/deep-proxy": "^1.8.4",
     "@sentry/electron": "^3.0.0",
+    "chokidar": "^3.5.3",
     "conf": "^10.1.2",
     "electron-log": "^4.4.6",
     "eslint-config-prettier": "^8.5.0",
@@ -36,15 +43,16 @@
   "build": {
     "appId": "animemusicquiz-electron",
     "files": [
-      "./build/**/*",
-      "./out/**/*"
+      "build/**/*",
+      "out/**/*",
+      "!out/amq/**/*.js"
     ],
     "win": {
       "target": [
         "nsis",
         "portable"
       ],
-      "icon": "./build/icons/icon.ico"
+      "icon": "./build/icon.ico"
     },
     "linux": {
       "target": [
@@ -54,10 +62,10 @@
       ],
       "synopsis": "An unofficial wrapper for the AnimeMusicQuiz browser-based game.",
       "category": "Game",
-      "icon": "./build/icons/icon.png"
+      "icon": "./build/icon.png"
     },
     "mac": {
-      "icon": "./build/icons/icon.icns",
+      "icon": "./build/icon.icns",
       "category": "public.app-category.music-games",
       "darkModeSupport": true
     }

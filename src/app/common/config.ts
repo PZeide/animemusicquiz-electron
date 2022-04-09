@@ -24,40 +24,22 @@ function createProxiedConfig(): AppConfig {
     defaults: defaultConfig,
   });
 
-  return new DeepProxy(defaultConfig, ({ trapName, value, path, PROXY }) => {
+  return new DeepProxy(defaultConfig, ({ trapName, value, path, key, PROXY }) => {
     if (trapName === "get") {
       if (typeof value === "object" && value !== null) {
         return PROXY;
       }
 
-      return conf.get(path.join("."));
+      return conf.get(path.join(".") + `.${key}`);
     }
 
     if (trapName === "set") {
-      conf.set(path.join("."), value);
+      conf.set(path.join(".") + `.${key}`, value);
       return true;
     }
 
     throw new TypeError("Trap not implemented");
   });
-
-  /*return new DeepProxy<AppConfig>({} as AppConfig, {
-    get(target: AppConfig, key: PropertyKey, receiver: any) {
-      const val = Reflect.get(target, key, receiver);
-      if (typeof val === "object" && val !== null) {
-        return this.nest(val);
-      } else {
-        const path = this.path.join(".") + "." + key.toString();
-        return conf.get(path);
-      }
-    },
-
-    set(target: AppConfig, key: PropertyKey, value: any): boolean {
-      const path = this.path.join(".") + "." + key.toString();
-      conf.set(path, value);
-      return true;
-    },
-  });*/
 }
 
 export const config = createProxiedConfig();

@@ -10,13 +10,13 @@ import {
   BrowserWindowConstructorOptions,
 } from "electron";
 import log from "electron-log";
-import { buildPath } from "@app/common/utils";
+import { publicPath } from "@app/common/utils";
 
 const isWindows = process.platform === "win32";
 
 function createWindow(): BrowserWindow {
   const options: BrowserWindowConstructorOptions = {
-    icon: path.join(buildPath, "icon.ico"),
+    icon: "../../../build/icon.ico",
     width: 1280,
     height: 720,
     minWidth: 1280,
@@ -50,7 +50,7 @@ function configureWindow(window: BrowserWindow, view: BrowserView) {
   if (isWindows) {
     // Load title bar on windows
     window
-      .loadFile(path.join(buildPath, "title-bar/index.html"))
+      .loadFile(path.join(publicPath, "title-bar/index.html"))
       .then(() => log.info("Title bar successfully loaded."));
   }
 

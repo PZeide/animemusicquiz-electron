@@ -9,7 +9,6 @@ export function setupAnalytics() {
     dsn: dsn,
     beforeSend(event) {
       if (isPackaged && config.general.analytics) return event;
-
       return null;
     },
   });

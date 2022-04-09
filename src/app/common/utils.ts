@@ -9,11 +9,7 @@ function computeOrIpc<T>(compute: () => T, ipc: string): T {
   }
 }
 
-export const buildPath = computeOrIpc(
-  () => path.resolve(__dirname, "../../../build/"),
-  "get-build-path"
-);
-
+export const publicPath = path.resolve(__dirname, "../../public/");
 export const appDataPath = computeOrIpc(() => app.getPath("userData"), "get-app-data-path");
 
 export const isPackaged = computeOrIpc(() => app.isPackaged, "is-packaged");
