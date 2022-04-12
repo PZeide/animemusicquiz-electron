@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import { redirectLoggers, setupLoggers } from "@app/common/loggers";
 import { setupAnalytics } from "@app/browser/analytics";
 import { delegateWindowState } from "@app/renderer/window-state";
-import { config, onConfigChange } from "@app/common/config";
+import { config, store } from "@app/common/config";
 
 setupLoggers();
 redirectLoggers();
@@ -15,27 +15,26 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupTitleBarButtons() {
-  document.getElementById("title-bar-min-button")!.addEventListener("click", () => {
+  document.getElementById("title-bar-min-button")?.addEventListener("click", () => {
     ipcRenderer.send("title-bar-minimize");
   });
 
-  document.getElementById("title-bar-max-button")!.addEventListener("click", () => {
+  document.getElementById("title-bar-max-button")?.addEventListener("click", () => {
     ipcRenderer.send("title-bar-maximize");
   });
 
-  document.getElementById("title-bar-unmax-button")!.addEventListener("click", () => {
+  document.getElementById("title-bar-unmax-button")?.addEventListener("click", () => {
     ipcRenderer.send("title-bar-unmaximize");
   });
 
-  document.getElementById("title-bar-close-button")!.addEventListener("click", () => {
+  document.getElementById("title-bar-close-button")?.addEventListener("click", () => {
     ipcRenderer.send("title-bar-close");
   });
 }
 
 function setupDarkThemeVariant() {
-  if (config.appearance.darkTheme) document.documentElement.classList.add("dark");
-
-  onConfigChange("appearance.darkTheme", (newValue) => {
+  document.documentElement.classList.toggle("dark", config.appearance.darkTheme);
+  store.onChange("appearance.darkTheme", (newValue: boolean | undefined) => {
     document.documentElement.classList.toggle("dark", newValue);
   });
 }

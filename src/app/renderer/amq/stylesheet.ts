@@ -3,11 +3,7 @@ import log from "electron-log";
 
 const styleIdPrefix = "amqe-style-";
 
-export function insertStylesheet(
-  id: string,
-  style: string,
-  isEnabled: boolean = true
-): Promise<void> {
+export function insertStylesheet(id: string, style: string, isEnabled = true): Promise<void> {
   const insertionId = styleIdPrefix + id;
   return new Promise<void>((resolve, reject) => {
     if (isStylesheetInserted(id)) {
@@ -19,24 +15,18 @@ export function insertStylesheet(
     stylesheet.setAttribute("type", "text/css");
     stylesheet.textContent = style;
 
-    if (!isEnabled) {
-      stylesheet.setAttribute("media", "not all");
-    }
+    if (!isEnabled) stylesheet.setAttribute("media", "not all");
 
     document.head.appendChild(stylesheet);
     resolve();
   });
 }
 
-export function insertStylesheetFile(
-  id: string,
-  path: string,
-  isEnabled: boolean = true
-): Promise<void> {
+export function insertStylesheetFile(id: string, path: string, isEnabled = true): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    fs.readFile(path, "utf-8", (error: any, style: string) => {
-      if (error) {
-        reject(error);
+    fs.readFile(path, "utf-8", (err: NodeJS.ErrnoException | null, style: string) => {
+      if (err) {
+        reject(err);
         return;
       }
 
@@ -48,7 +38,7 @@ export function insertStylesheetFile(
 export function removeStylesheet(id: string) {
   const insertionId = styleIdPrefix + id;
   const stylesheet = document.getElementById(insertionId);
-  if (!stylesheet) {
+  if (stylesheet === null) {
     log.error(`Cannot find stylesheet: ${id}.`);
     return;
   }
@@ -59,7 +49,7 @@ export function removeStylesheet(id: string) {
 export function enableStylesheet(id: string) {
   const insertionId = styleIdPrefix + id;
   const stylesheet = document.getElementById(insertionId);
-  if (!stylesheet) {
+  if (stylesheet === null) {
     log.error(`Cannot find stylesheet: ${id}.`);
     return;
   }
@@ -70,7 +60,7 @@ export function enableStylesheet(id: string) {
 export function disableStylesheet(id: string) {
   const insertionId = styleIdPrefix + id;
   const stylesheet = document.getElementById(insertionId);
-  if (!stylesheet) {
+  if (stylesheet === null) {
     log.error(`Cannot find stylesheet: ${id}.`);
     return;
   }
@@ -82,16 +72,14 @@ export function toggleStylesheet(id: string, force?: boolean) {
   if (force === undefined) {
     isStylesheetInserted(id) ? disableStylesheet(id) : enableStylesheet(id);
   } else {
-    force
-      ? !isStylesheetInserted(id) && enableStylesheet(id)
-      : isStylesheetInserted(id) && disableStylesheet(id);
+    force ? enableStylesheet(id) : disableStylesheet(id);
   }
 }
 
 export function editStylesheet(id: string, style: string) {
   const insertionId = styleIdPrefix + id;
   const stylesheet = document.getElementById(insertionId);
-  if (!stylesheet) {
+  if (stylesheet === null) {
     log.error(`Cannot find stylesheet: ${id}.`);
     return;
   }

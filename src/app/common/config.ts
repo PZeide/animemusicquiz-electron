@@ -1,8 +1,29 @@
-import Conf from "conf";
-import { appDataPath, appVersion } from "@app/common/utils";
-import { DeepProxy } from "@qiwi/deep-proxy";
+import * as path from "path";
+import { appDataPath } from "@app/common/utils";
+import { Store, StoreMigration } from "@app/common/store";
 
-const callbacks: Record<string, OnConfigChangeCallback<any>[]> = {};
+export interface BackgroundCollection {
+  files: string[];
+  rotationTime: number;
+  blur: number;
+}
+
+export interface AppConfig {
+  general: {
+    analytics: boolean;
+    discordIntegration: boolean;
+  };
+
+  appearance: {
+    customTitleBar: boolean;
+    darkTheme: boolean;
+    transparency: boolean;
+    background: {
+      collections: Record<string, BackgroundCollection>;
+      current: string;
+    };
+  };
+}
 
 const defaultConfig: AppConfig = {
   general: {
@@ -10,47 +31,31 @@ const defaultConfig: AppConfig = {
     discordIntegration: true,
   },
   appearance: {
+    customTitleBar: true,
     darkTheme: false,
-    backgroundImage: "",
     transparency: true,
+    background: {
+      collections: {
+        ["Default"]: {
+          files: ["$default"],
+          rotationTime: -1,
+          blur: 0,
+        },
+      },
+      current: "Default",
+    },
   },
 };
 
-function createProxiedConfig(): AppConfig {
-  const conf = new Conf({
-    cwd: appDataPath,
-    projectVersion: appVersion,
-    watch: true,
-    defaults: defaultConfig,
-  });
+const migrations: Record<string, StoreMigration<AppConfig>> = {};
 
-  return new DeepProxy(defaultConfig, ({ trapName, value, path, key, PROXY }) => {
-    if (trapName === "get") {
-      if (typeof value === "object" && value !== null) {
-        return PROXY;
-      }
+export const configVersion = "1.0.0";
 
-      return conf.get(path.join(".") + `.${key}`);
-    }
+export const store = new Store<AppConfig>(
+  path.join(appDataPath, "config.json"),
+  defaultConfig,
+  configVersion,
+  migrations
+);
 
-    if (trapName === "set") {
-      conf.set(path.join(".") + `.${key}`, value);
-      return true;
-    }
-
-    throw new TypeError("Trap not implemented");
-  });
-}
-
-export const config = createProxiedConfig();
-
-export function onConfigChange<P extends Paths<AppConfig>>(
-  path: P,
-  callback: OnConfigChangeCallback<Get<AppConfig, P>>
-) {
-  if (!(path in callbacks)) {
-    callbacks[path] = [];
-  }
-
-  callbacks[path].push(callback);
-}
+export const config = store.config;

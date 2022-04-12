@@ -1,14 +1,43 @@
+@use "sass:math";
+
 :root {
-  //noinspection CssUnknownTarget
-  --bg: url(amq-serve://background);
+  --background-blur: 0;
 }
 
-@mixin amq-background {
-  background-image: var(--bg) !important;
+#mainContainer > *, #awMainView, #storeWindow, #startPage, #loadingScreen {
+  background: none;
+}
+
+@mixin background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+
+#background-image-container {
+  @include background-container;
   background-size: cover;
+  transition: background-image .2s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(var(--background-blur));
+  }
 }
 
-#startPage { @include amq-background; }
-#gameContainer { @include amq-background; }
-#loadingScreen { @include amq-background; }
-#awMainView { @include amq-background; }
+#background-video-container {
+  @include background-container;
+  filter: blur(var(--background-blur));
+}

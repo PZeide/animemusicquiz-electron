@@ -7,40 +7,38 @@ import { setupAnalytics } from "@app/browser/analytics";
 import { delegateWindowState } from "@app/renderer/window-state";
 import { insertStylesheetFile } from "@app/renderer/amq/stylesheet";
 import { publicPath } from "@app/common/utils";
-import {
-  setupBackgroundImage,
-  setupCustomStyle,
-  setupDarkTheme,
-  setupTransparency,
-} from "@app/renderer/amq/appearance";
+import { setupTransparency } from "@app/renderer/amq/appearance/transparency";
+import { setupDarkTheme } from "@app/renderer/amq/appearance/dark";
+import { setupCustomStyle } from "@app/renderer/amq/appearance/custom";
+import { setupBackground } from "@app/renderer/amq/appearance/background";
 
 setupLoggers();
 redirectLoggers();
 setupAnalytics();
 
-fs.readFile(path.join(__dirname, "../../amq.js"), "utf-8", (error, inject) => {
-  if (error) {
-    log.error("Unable to inject main script to AMQ site.");
+fs.readFile(path.join(__dirname, "../../amq.js"), "utf-8", (err, inject) => {
+  if (err) {
+    log.error("Unable to inject main script to AMQ site.", err);
     return;
   }
 
   webFrame
     .executeJavaScript(inject)
     .then(() => log.info("Successfully injected js to AMQ site."))
-    .catch((e) => log.error("An error occurred while executing script into AMQ site.", e));
+    .catch((err) => log.error("An error occurred while executing script into AMQ site.", err));
 });
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", () => {
   delegateWindowState(document.documentElement);
 
-  await setupAppearance();
-  await insertStylesheetFile("app", path.join(publicPath, "amq/styles/app.css")).catch(() =>
-    log.error("Unable to inject app stylesheet.")
+  setupAppearance().catch((err) => console.log("Error setting up appearance", err));
+  insertStylesheetFile("app", path.join(publicPath, "amq/styles/app.css")).catch((err) =>
+    console.log("Error inserting app stylesheet", err)
   );
 });
 
 async function setupAppearance() {
-  await setupBackgroundImage();
+  await setupBackground();
   await setupTransparency();
   await setupDarkTheme();
   await setupCustomStyle();

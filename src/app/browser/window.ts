@@ -11,8 +11,9 @@ import {
 } from "electron";
 import log from "electron-log";
 import { publicPath } from "@app/common/utils";
+import { config } from "@app/common/config";
 
-const isWindows = process.platform === "win32";
+const customTitleBar = process.platform === "win32" && config.appearance.customTitleBar;
 
 function createWindow(): BrowserWindow {
   const options: BrowserWindowConstructorOptions = {
@@ -22,8 +23,7 @@ function createWindow(): BrowserWindow {
     minWidth: 1280,
     minHeight: 720,
     title: "AnimeMusicQuiz",
-    // Show custom title bar only on windows
-    frame: !isWindows,
+    frame: !customTitleBar,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "../renderer/title-bar-preload.js"),
@@ -47,11 +47,11 @@ function configureWindow(window: BrowserWindow, view: BrowserView) {
   window.setBrowserView(view);
   window.setMenuBarVisibility(false);
 
-  if (isWindows) {
-    // Load title bar on windows
+  if (customTitleBar) {
     window
       .loadFile(path.join(publicPath, "title-bar/index.html"))
-      .then(() => log.info("Title bar successfully loaded."));
+      .then(() => log.info("Title bar successfully loaded."))
+      .catch((err) => log.warn("Failed to load title bar.", err));
   }
 
   listenTitleBarButtons(window);
@@ -63,9 +63,9 @@ function configureView(view: BrowserView, window: BrowserWindow) {
   // Set bounds of browser view to window bounds minus title bar height
   view.setBounds({
     x: 0,
-    y: isWindows ? titleBarHeight : 0,
+    y: customTitleBar ? titleBarHeight : 0,
     width: window.getBounds().width,
-    height: isWindows ? window.getBounds().height - titleBarHeight : window.getBounds().height,
+    height: customTitleBar ? window.getBounds().height - titleBarHeight : window.getBounds().height,
   });
 
   view.setAutoResize({
@@ -73,17 +73,17 @@ function configureView(view: BrowserView, window: BrowserWindow) {
     height: true,
   });
 
-  if (isWindows) {
-    // Adapt browser view position and size when toggling fullscreen since title bar disappear
+  if (customTitleBar) {
+    // Adapt browser view position and size when toggling fullscreen because title bar disappears
     window.on("enter-full-screen", () => {
-      let bounds = view.getBounds();
+      const bounds = view.getBounds();
       bounds.y = 0;
       bounds.height += titleBarHeight;
       view.setBounds(bounds);
     });
 
     window.on("leave-full-screen", () => {
-      let bounds = view.getBounds();
+      const bounds = view.getBounds();
       bounds.y = 30;
       bounds.height -= titleBarHeight;
       view.setBounds(bounds);
@@ -94,7 +94,7 @@ function configureView(view: BrowserView, window: BrowserWindow) {
   view.webContents.setWindowOpenHandler((handler) => {
     shell
       .openExternal(handler.url)
-      .catch(() => log.warn("Unable to load external url in default browser."));
+      .catch((err) => log.warn("Unable to load external url in default browser.", err));
 
     return { action: "deny" };
   });
@@ -140,7 +140,7 @@ function setupWindowStateListeners(window: BrowserWindow, view: BrowserView) {
   });
 }
 
-export function initializeWindow(): [BrowserWindow, BrowserView] {
+export function initializeWindow(): BrowserWindow {
   const window = createWindow();
   const view = createView();
 
@@ -155,8 +155,8 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
       log.info("AnimeMusicQuiz site successfully loaded.");
       window.show();
     })
-    .catch(() => {
-      log.error("AnimeMusicQuiz site is unreachable.");
+    .catch((err) => {
+      log.error("AnimeMusicQuiz site is unreachable.", err);
       dialog.showErrorBox(
         "AMQ unavailable",
         "AnimeMusicQuiz is currently unavailable.\nYou should check your internet connection or try again later."
@@ -164,5 +164,5 @@ export function initializeWindow(): [BrowserWindow, BrowserView] {
       app.quit();
     });
 
-  return [window, view];
+  return window;
 }

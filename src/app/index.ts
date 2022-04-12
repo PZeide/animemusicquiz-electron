@@ -1,6 +1,6 @@
 import "v8-compile-cache";
 
-import { app, nativeTheme, BrowserWindow, BrowserView } from "electron";
+import { app, nativeTheme, BrowserWindow } from "electron";
 import log from "electron-log";
 import { setupLoggers } from "@app/common/loggers";
 import { setupAnalytics } from "@app/browser/analytics";
@@ -10,12 +10,11 @@ import { initializeWindow } from "@app/browser/window";
 import { setupBrowserIpc } from "@app/browser/ipc";
 
 let browserWindow: BrowserWindow;
-let amqBrowserView: BrowserView;
 
 setupLoggers();
 setupAnalytics();
 
-app.whenReady().then(() => {
+void app.whenReady().then(() => {
   log.info("Initializing AnimeMusicQuiz Electron.");
 
   if (!app.requestSingleInstanceLock()) {
@@ -28,15 +27,12 @@ app.whenReady().then(() => {
   setupBrowserIpc();
   setupSession();
 
-  const [window, view] = initializeWindow();
-  browserWindow = window;
-  amqBrowserView = view;
-
-  setupApplicationMenu(window);
+  browserWindow = initializeWindow();
+  setupApplicationMenu(browserWindow);
 
   if (!app.isPackaged) {
     // Open dev tools if not in production environment
-    view.webContents.openDevTools({ mode: "detach" });
+    browserWindow.getBrowserView()?.webContents.openDevTools({ mode: "detach" });
   }
 });
 
@@ -60,8 +56,6 @@ app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    const [window, view] = initializeWindow();
-    browserWindow = window;
-    amqBrowserView = view;
+    browserWindow = initializeWindow();
   }
 });
